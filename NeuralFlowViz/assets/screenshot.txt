@@ -1,0 +1,2 @@
+This is a placeholder for the screenshot image.
+When running the application, take a screenshot and save it as 'screenshot.png' in this directory. 

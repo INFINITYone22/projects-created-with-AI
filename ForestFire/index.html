@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forest Fire Simulation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Forest Fire Simulation</h1>
+        <div class="simulation-container">
+            <canvas id="forestCanvas"></canvas>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="density">Tree Density:</label>
+                    <input type="range" id="density" min="0.1" max="0.9" step="0.05" value="0.6">
+                    <span id="densityValue">60%</span>
+                </div>
+                <div class="control-group">
+                    <label for="windDirection">Wind Direction:</label>
+                    <select id="windDirection">
+                        <option value="none">None</option>
+                        <option value="north">North</option>
+                        <option value="east">East</option>
+                        <option value="south">South</option>
+                        <option value="west">West</option>
+                        <option value="northeast">Northeast</option>
+                        <option value="southeast">Southeast</option>
+                        <option value="southwest">Southwest</option>
+                        <option value="northwest">Northwest</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="windStrength">Wind Strength:</label>
+                    <input type="range" id="windStrength" min="0" max="10" step="1" value="5">
+                    <span id="windStrengthValue">5</span>
+                </div>
+                <div class="control-group">
+                    <label for="fireSpreadRate">Fire Spread Rate:</label>
+                    <input type="range" id="fireSpreadRate" min="1" max="10" step="1" value="5">
+                    <span id="fireSpreadRateValue">5</span>
+                </div>
+                <div class="button-group">
+                    <button id="resetBtn">Reset Forest</button>
+                    <button id="startFireBtn">Start Fire</button>
+                    <button id="pauseBtn">Pause</button>
+                </div>
+            </div>
+        </div>
+        <div class="stats">
+            <div>Trees: <span id="treeCount">0</span></div>
+            <div>Burning: <span id="burningCount">0</span></div>
+            <div>Burned: <span id="burnedCount">0</span></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

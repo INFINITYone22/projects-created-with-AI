@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendulum Wave Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pendulum Wave</h1>
+        <div class="canvas-container">
+            <canvas id="pendulumCanvas"></canvas>
+        </div>
+        <div class="controls">
+            <div class="control-group">
+                <label for="pendulumCount">Number of Pendulums:</label>
+                <input type="range" id="pendulumCount" min="5" max="40" value="20" class="slider">
+                <span id="pendulumCountValue">20</span>
+            </div>
+            <div class="control-group">
+                <label for="cycleTime">Cycle Time (seconds):</label>
+                <input type="range" id="cycleTime" min="30" max="120" value="60" class="slider">
+                <span id="cycleTimeValue">60</span>
+            </div>
+            <div class="control-group">
+                <button id="resetBtn" class="btn">Reset</button>
+                <button id="pauseBtn" class="btn">Pause</button>
+            </div>
+        </div>
+        <div class="info">
+            <p>
+                Pendulum waves demonstrate the principles of simple harmonic motion and wave physics.
+                Each pendulum has a slightly different length, causing them to swing at different rates.
+                Over time, they create mesmerizing wave patterns as they move in and out of phase with each other.
+            </p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tectonic Plate Earthquake Simulation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lil-gui@0.17"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+    <div class="overlay">
+        <div class="info-panel">
+            <h1>Tectonic Plate Simulation</h1>
+            <div class="stats">
+                <div class="stat">
+                    <div class="label">Stress Level:</div>
+                    <div class="meter">
+                        <div id="stress-meter" class="meter-fill"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="label">Earthquakes:</div>
+                    <div id="earthquake-count">0</div>
+                </div>
+                <div class="stat">
+                    <div class="label">Max Magnitude:</div>
+                    <div id="max-magnitude">0.0</div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="toggle-simulation">Pause</button>
+                <button id="reset-simulation">Reset</button>
+            </div>
+        </div>
+    </div>
+    <canvas id="simulation-canvas"></canvas>
+    
+    <script src="js/utils.js"></script>
+    <script src="js/plate.js"></script>
+    <script src="js/fault.js"></script>
+    <script src="js/earthquake.js"></script>
+    <script src="js/simulation.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

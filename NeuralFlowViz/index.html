@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralFlowViz - Interactive LLM Simulator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- p5.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <!-- p5.sound for potential audio feedback -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/addons/p5.sound.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>NeuralFlowViz</h1>
+        <p>An Interactive Large Language Model Simulator</p>
+    </header>
+
+    <main>
+        <div id="canvas-container"></div>
+        
+        <div class="controls-panel">
+            <div class="input-section">
+                <h2>Input Prompt</h2>
+                <textarea id="user-prompt" placeholder="Enter your prompt here..."></textarea>
+                <button id="process-btn">Process Text</button>
+            </div>
+            
+            <div class="model-config">
+                <h2>Model Configuration</h2>
+                <div class="config-controls">
+                    <div class="control-group">
+                        <label for="num-layers">Number of Layers:</label>
+                        <input type="range" id="num-layers" min="1" max="12" value="6">
+                        <span class="value-display">6</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="num-heads">Attention Heads:</label>
+                        <input type="range" id="num-heads" min="1" max="16" value="8">
+                        <span class="value-display">8</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="model-size">Model Size:</label>
+                        <select id="model-size">
+                            <option value="tiny">Tiny (125M)</option>
+                            <option value="small">Small (1.3B)</option>
+                            <option value="medium" selected>Medium (6B)</option>
+                            <option value="large">Large (13B)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="animation-speed">Animation Speed:</label>
+                        <input type="range" id="animation-speed" min="1" max="10" value="5">
+                        <span class="value-display">5</span>
+                    </div>
+                </div>
+                
+                <button id="apply-config">Apply Configuration</button>
+            </div>
+            
+            <div class="visualization-controls">
+                <h2>Visualization Controls</h2>
+                <div class="view-buttons">
+                    <button id="zoom-in">Zoom In</button>
+                    <button id="zoom-out">Zoom Out</button>
+                    <button id="reset-view">Reset View</button>
+                </div>
+                <div class="view-options">
+                    <label>
+                        <input type="checkbox" id="show-attention" checked>
+                        Show Attention Maps
+                    </label>
+                    <label>
+                        <input type="checkbox" id="show-activations" checked>
+                        Show Neuron Activations
+                    </label>
+                    <label>
+                        <input type="checkbox" id="show-tooltips" checked>
+                        Show Educational Tooltips
+                    </label>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Created with p5.js | <a href="#" id="about-link">About This Project</a></p>
+    </footer>
+
+    <div id="modal" class="hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>About NeuralFlowViz</h2>
+            <p>NeuralFlowViz is an interactive visualization tool that simulates how Large Language Models (LLMs) process text. It provides an educational and intuitive way to understand the inner workings of transformer-based neural networks.</p>
+            <h3>How to Use</h3>
+            <ul>
+                <li>Enter a prompt in the text area</li>
+                <li>Adjust model parameters using the sliders</li>
+                <li>Click "Process Text" to see the animation</li>
+                <li>Use zoom controls to explore different levels of detail</li>
+            </ul>
+            <p>This is a simplified simulation for educational purposes and does not represent the full complexity of actual LLM implementations.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript files -->
+    <script src="js/config.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/visualization.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

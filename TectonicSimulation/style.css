@@ -1,0 +1,107 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.info-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
+    border: 1px solid rgba(0, 150, 255, 0.5);
+    pointer-events: all;
+}
+
+h1 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #0af;
+    text-align: center;
+}
+
+.stats {
+    margin-bottom: 20px;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.label {
+    color: #aaa;
+}
+
+.meter {
+    width: 150px;
+    height: 15px;
+    background: rgba(50, 50, 50, 0.6);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #0fa, #ff0, #f30);
+    transition: width 0.3s ease;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+}
+
+button {
+    background: rgba(0, 100, 200, 0.6);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: rgba(0, 150, 255, 0.8);
+}
+
+#earthquake-count, #max-magnitude {
+    font-family: monospace;
+    font-size: 16px;
+    color: #0af;
+} 
