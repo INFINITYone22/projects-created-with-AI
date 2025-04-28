@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS - AI Resume Analyzer (Dark Mode)</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+    <link href="[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap)" rel="stylesheet">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* Plain black background */
+            color: #e5e7eb; /* gray-200 - default light text */
+        }
+
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* gray-800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563; /* gray-600 */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; /* gray-500 */
+        }
+
+        /* Main container - Centered */
+        .main-container {
+            max-width: 5xl; /* Centered content width (adjust as needed) */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1.5rem; /* p-6 */
+            min-height: 100vh; /* Ensure it takes full height */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Card styling - Dark */
+        .card {
+            background-color: #1f2937; /* gray-800 */
+            border: 1px solid #374151; /* gray-700 */
+            transition: all 0.3s ease;
+            /* Removed shadow as it's less visible on black */
+        }
+
+        /* Input styling - Dark */
+        .form-input, .form-textarea {
+            background-color: #374151; /* gray-700 */
+            border: 1px solid #4b5563; /* gray-600 */
+            color: #e5e7eb; /* gray-200 */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            caret-color: #60a5fa; /* blue-400 - cursor color */
+        }
+         .form-input::placeholder, .form-textarea::placeholder {
+             color: #9ca3af; /* gray-400 */
+         }
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #60a5fa; /* blue-400 */
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.4); /* blue focus ring */
+            background-color: #4b5563; /* gray-600 */
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        .form-label {
+             color: #d1d5db; /* gray-300 */
+             margin-bottom: 0.5rem; /* mb-2 */
+             font-weight: 500; /* font-medium */
+             display: block;
+        }
+
+        /* Custom file input styling - Dark */
+        input[type="file"] {
+            color: #9ca3af; /* gray-400 */
+        }
+        input[type="file"]::file-selector-button {
+            margin-right: 0.75rem; /* mr-3 */
+            padding: 0.5rem 1rem; /* py-2 px-4 */
+            border: 1px solid #4b5563; /* gray-600 */
+            border-radius: 0.375rem; /* rounded-md */
+            background-color: #374151; /* gray-700 */
+            color: #e5e7eb; /* gray-200 */
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        input[type="file"]::file-selector-button:hover {
+            background-color: #4b5563; /* gray-600 */
+        }
+        #file-name {
+            margin-top: 0.5rem; /* mt-2 */
+            font-size: 0.875rem; /* text-sm */
+            color: #9ca3af; /* gray-400 */
+        }
+
+        /* Button styling - Dark */
+        .submit-button {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .submit-button:hover {
+            background-color: #2563eb; /* blue-600 */
+        }
+         .submit-button:active {
+             transform: scale(0.98);
+         }
+         .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #4b5563; /* gray-600 */
+         }
+
+        /* Loading Spinner - Dark */
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #374151; /* gray-700 */
+            border-bottom-color: #60a5fa; /* blue-400 */
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+            margin: 1rem auto;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Result Area Styling - Dark */
+        #result-area {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.5s ease-out, max-height 0.5s ease-out, margin-top 0.5s ease-out;
+            margin-top: 0;
+        }
+        #result-area.visible {
+            opacity: 1;
+            max-height: 5000px;
+            margin-top: 1.5rem; /* mt-6 */
+        }
+        .analysis-section {
+            margin-bottom: 1.5rem; /* mb-6 */
+            padding-bottom: 1.5rem; /* pb-6 */
+            border-bottom: 1px solid #374151; /* gray-700 */
+        }
+         .analysis-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .analysis-section h3 {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #e5e7eb; /* gray-200 */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .analysis-section p, .analysis-section ul {
+            font-size: 0.95rem;
+            color: #d1d5db; /* gray-300 */
+            line-height: 1.65;
+        }
+         .analysis-section ul {
+            list-style: disc;
+            padding-left: 1.5rem; /* pl-6 */
+         }
+         .analysis-section .badge {
+             display: inline-block;
+             padding: 0.2rem 0.7rem;
+             margin: 0.2rem;
+             font-size: 0.8rem;
+             font-weight: 500;
+             background-color: #4b5563; /* gray-600 */
+             color: #dbeafe; /* blue-100 */
+             border: 1px solid #6b7280; /* gray-500 */
+             border-radius: 0.375rem; /* rounded-md */
+         }
+         /* List item colors adjusted for dark theme */
+         .analysis-section .warning li { color: #fca5a5; /* red-300 */ }
+         .analysis-section .strength li { color: #86efac; /* green-300 */ }
+         .analysis-section .gap li { color: #fdba74; /* orange-300 */ }
+
+         /* Score styling with Progress Bar - Dark */
+         .score-display {
+             background-color: #374151; /* gray-700 */
+             border-radius: 0.375rem; /* rounded-md */
+             overflow: hidden;
+             height: 1.5rem; /* h-6 */
+             margin-top: 0.5rem; /* mt-2 */
+             position: relative;
+         }
+         .score-bar {
+             height: 100%;
+             transition: width 0.5s ease-out;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             font-size: 0.875rem; /* text-sm */
+             font-weight: 600;
+             color: #111827; /* gray-900 - Dark text on light bars */
+             text-shadow: none; /* Remove shadow */
+         }
+         /* Bar colors adjusted for contrast on dark */
+         .score-bar.high { background-color: #4ade80; color: #14532d; } /* green-400 bg, darker green text */
+         .score-bar.medium { background-color: #facc15; color: #713f12; } /* yellow-400 bg, darker yellow text */
+         .score-bar.low { background-color: #f87171; color: #7f1d1d; } /* red-400 bg, darker red text */
+
+         /* Error Message - Dark */
+         #error-message {
+             background-color: #450a0a; /* dark red-900 */
+             border-color: #991b1b; /* red-800 */
+             color: #fecaca; /* red-200 */
+         }
+         #error-message strong {
+             color: #ffffff; /* white */
+         }
+
+         /* Details/Summary - Dark */
+         details summary {
+             color: #9ca3af; /* gray-400 */
+             cursor: pointer;
+         }
+         details summary:hover {
+             color: #d1d5db; /* gray-300 */
+         }
+         details pre {
+             background-color: #111827; /* gray-900 */
+             border-color: #374151; /* gray-700 */
+             color: #9ca3af; /* gray-400 */
+         }
+
+    </style>
+</head>
+<body class="antialiased">
+    <div class="main-container">
+
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-100 mb-2">
+                {{ message }}
+            </h1>
+            <p class="text-gray-400">Upload a resume and job description for semantic analysis.</p>
+        </header>
+
+        <div class="card p-6 md:p-8 rounded-lg mb-6">
+            <form id="upload-form" enctype="multipart/form-data">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="job_description" class="form-label text-base">Job Description</label>
+                        <textarea id="job_description" name="job_description" class="form-textarea w-full px-3 py-2 rounded-md shadow-sm text-sm" placeholder="Paste the full job description here..." required></textarea>
+                    </div>
+
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <label for="resume" class="form-label text-base">Candidate Resume</label>
+                            <input type="file" id="resume" name="resume" class="block w-full text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-500 rounded-md" accept=".pdf,.docx,.txt" required onchange="displayFileName(this)">
+                            <p id="file-name" class="mt-2 text-sm">&nbsp;</p>
+                            <p class="mt-1 text-xs text-gray-500">Allowed formats: PDF, DOCX, TXT.</p>
+                        </div>
+
+                        <div class="mt-6 text-right">
+                            <button type="submit" id="submit-button" class="submit-button inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500">
+                                Analyze Resume
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="loading-indicator" class="hidden text-center p-4">
+             <div class="loader"></div>
+             <p class="text-gray-400 font-medium mt-2">Analyzing...</p>
+        </div>
+
+        <div id="error-message" class="hidden card border px-4 py-3 rounded-md relative" role="alert">
+            <strong class="font-bold">Error:</strong>
+            <span class="block sm:inline" id="error-content"></span>
+        </div>
+
+        <div id="result-area" class="card p-6 md:p-8 rounded-lg">
+            <h2 class="text-2xl font-semibold text-gray-100 mb-5" id="result-title">Analysis Result</h2>
+            <div id="result-content" class="space-y-6">
+                </div>
+             <details class="mt-6 text-xs">
+                <summary>Show Raw JSON Response</summary>
+                <pre id="raw-json" class="mt-2 p-3 border rounded overflow-x-auto"></pre>
+            </details>
+        </div>
+
+    </div>
+
+    <script>
+        // --- JAVASCRIPT REMAINS EXACTLY THE SAME AS THE PREVIOUS VERSION ---
+        // It correctly handles the display logic regardless of the theme.
+
+        const form = document.getElementById('upload-form');
+        const submitButton = document.getElementById('submit-button');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const errorDiv = document.getElementById('error-message');
+        const errorContent = document.getElementById('error-content');
+        const resultArea = document.getElementById('result-area');
+        const resultContent = document.getElementById('result-content');
+        const resultTitle = document.getElementById('result-title');
+        const rawJsonOutput = document.getElementById('raw-json');
+        const fileInput = document.getElementById('resume');
+        const fileNameDisplay = document.getElementById('file-name');
+
+        // Function to display chosen file name
+        function displayFileName(input) {
+            if (input.files && input.files.length > 0) {
+                fileNameDisplay.textContent = `Selected: ${input.files[0].name}`;
+            } else {
+                fileNameDisplay.innerHTML = '&nbsp;'; // Clear if no file
+            }
+        }
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // --- Reset UI State ---
+            errorDiv.classList.add('hidden');
+            resultArea.classList.remove('visible'); // Hide results smoothly
+            resultContent.innerHTML = '';
+            rawJsonOutput.textContent = '';
+            loadingIndicator.classList.remove('hidden');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Analyzing...';
+
+            const formData = new FormData(form);
+
+            try {
+                // --- API Call ---
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // --- Response Handling ---
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || `Server Error: ${response.status}`);
+                }
+
+                // --- Display Success ---
+                displayAnalysis(data);
+                resultArea.classList.add('visible'); // Show results smoothly
+
+
+            } catch (error) {
+                // --- Display Error ---
+                console.error('Analysis Error:', error);
+                errorContent.textContent = ` ${error.message}`;
+                errorDiv.classList.remove('hidden');
+                resultArea.classList.remove('visible'); // Ensure results stay hidden on error
+
+            } finally {
+                 // --- Final UI Cleanup ---
+                 loadingIndicator.classList.add('hidden');
+                 submitButton.disabled = false;
+                 submitButton.textContent = 'Analyze Resume';
+            }
+        });
+
+        function displayAnalysis(data) {
+            // Update title and raw JSON
+            resultTitle.textContent = `Analysis for: ${data.filename || 'Resume'}`;
+            rawJsonOutput.textContent = JSON.stringify(data, null, 2);
+
+            // Clear previous content
+            resultContent.innerHTML = '';
+
+            const analysis = data.analysis;
+
+            // --- Helper to create sections ---
+            function createSection(title, content) {
+                 const section = document.createElement('div');
+                 section.className = 'analysis-section';
+                 section.innerHTML = `
+                    <h3>${title}</h3>
+                    ${content}
+                 `;
+                 resultContent.appendChild(section);
+            }
+
+            // --- Build HTML for analysis details ---
+
+            // Similarity Score with Progress Bar
+            if (analysis.similarity_score !== undefined) {
+                const scoreValue = analysis.similarity_score;
+                const scorePercent = (scoreValue * 100).toFixed(1);
+                let scoreColorClass = 'low'; // Default to low
+                if (scoreValue > 0.75) scoreColorClass = 'high';
+                else if (scoreValue >= 0.6) scoreColorClass = 'medium';
+
+                createSection('Semantic Similarity Score', `
+                    <div class="score-display">
+                        <div class="score-bar ${scoreColorClass}" style="width: ${scorePercent}%;" role="progressbar" aria-valuenow="${scorePercent}" aria-valuemin="0" aria-valuemax="100">
+                            ${scorePercent}%
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-2">Measures semantic alignment between resume and job description.</p>`
+                );
+            }
+
+            // Semantic Summary
+            if (analysis.semantic_summary) {
+                 createSection('AI Summary & Insights',
+                     `<p>${analysis.semantic_summary}</p>`
+                 );
+            }
+
+             // Matched Keywords (as badges)
+            if (analysis.matched_keywords && analysis.matched_keywords.length > 0) {
+                let badgesHTML = '';
+                analysis.matched_keywords.forEach(keyword => {
+                    badgesHTML += `<span class="badge">${keyword}</span>`;
+                });
+                 createSection('Detected Keywords', `<div class="flex flex-wrap gap-1">${badgesHTML}</div>`);
+            }
+
+            // Candidate Strengths
+            if (analysis.candidate_strengths && analysis.candidate_strengths.length > 0) {
+                let strengthsHTML = '<ul class="strength list-disc pl-5 space-y-1">';
+                analysis.candidate_strengths.forEach(strength => {
+                    strengthsHTML += `<li>${strength}</li>`;
+                });
+                strengthsHTML += '</ul>';
+                createSection('Potential Strengths', strengthsHTML);
+            }
+
+             // Potential Gaps
+            if (analysis.potential_gaps && analysis.potential_gaps.length > 0) {
+                let gapsHTML = '<ul class="gap list-disc pl-5 space-y-1">';
+                analysis.potential_gaps.forEach(gap => {
+                    gapsHTML += `<li>${gap}</li>`;
+                });
+                gapsHTML += '</ul>';
+                 createSection('Potential Gaps / Areas to Verify', gapsHTML);
+            }
+
+             // Warnings
+            if (analysis.warnings && analysis.warnings.length > 0) {
+                let warningsHTML = '<ul class="warning list-disc pl-5 space-y-1">';
+                 analysis.warnings.forEach(warning => {
+                    warningsHTML += `<li>${warning}</li>`;
+                });
+                warningsHTML += '</ul>';
+                createSection('Flags & Warnings', warningsHTML);
+            }
+        }
+
+    </script>
+</body>
+</html>
+
+</final_file_content>
+
+IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
+
+<environment_details>
+# VSCode Visible Files
+ats_app/templates/index.html
+
+# VSCode Open Tabs
+INFINITYone_Welcome/index.html
+dataset/data.txt
+ats_app/app.py
+ats_app/templates/index.html
+
+# Actively Running Terminals
+## Original command: `cd ats_app ; python app.py`
+### New Output
+127.0.0.1 - - [28/Apr/2025 09:24:56] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [28/Apr/2025 09:24:56] "GET /[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com) HTTP/1.1" 404 -
+127.0.0.1 - - [28/Apr/2025 09:24:56] "GET /[https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap) HTTP/1.1" 404 -
+## Original command: `cd ats_app ; python app.py`
+## Original command: `cd ats_app ; python app.py`
+## Original command: `cd ats_app ; python app.py`
+## Original command: `cd ats_app ; python app.py`
+
+# Current Time
+4/28/2025, 9:25:10 AM (Asia/Calcutta, UTC+5.5:00)
+
+# Context Window Usage
+108,003 / 1,048.576K tokens used (10%)
+
+# Current Mode
+ACT MODE
+</environment_details>
